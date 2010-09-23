@@ -16,6 +16,22 @@ Gem::Specification.new do |s|
     "LICENSE",
      "README.rdoc"
   ]
+  s.files = [
+    ".bundle/config",
+     ".gitignore",
+     ".rspec",
+     "Gemfile",
+     "Gemfile.lock",
+     "LICENSE",
+     "README.rdoc",
+     "Rakefile",
+     "VERSION",
+     "lib/vidibus-pureftpd.rb",
+     "lib/vidibus/pureftpd.rb",
+     "spec/spec_helper.rb",
+     "spec/vidibus/pureftpd_spec.rb",
+     "vidibus-pureftpd.gemspec"
+  ]
   s.homepage = %q{http://github.com/vidibus/vidibus-pureftpd}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
