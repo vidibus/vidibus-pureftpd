@@ -1,6 +1,6 @@
 = vidibus-pureftpd
 
-This gem is part of the open source SOA framework Vidibus: http://www.vidibus.org
+This gem is part of the open source SOA framework Vidibus: http://vidibus.org
 
 TODO: describe
 
@@ -20,22 +20,22 @@ Then call bundle install on your console.
 
 == Install Pure-FTPd on Debian Lenny
 
-  # Get the package:
+Get the package:
   aptitude install pure-ftpd-common pure-ftpd
 
-  # Add group pureftpd_group:
+Add group pureftpd_group:
   groupadd pureftpd_group
 
-  # Add user pureftpd_user without permission to a home directory or any shell:
+Add user pureftpd_user without permission to a home directory or any shell:
   useradd -g pureftpd_group -d /dev/null -s /etc pureftpd_user
 
-  # By default all user data will be saved in /etc/pure-ftpd/pureftpd.passwd, so make sure this file exists:
+By default all user data will be saved in /etc/pure-ftpd/pureftpd.passwd, so make sure this file exists:
   touch /etc/pure-ftpd/pureftpd.passwd
 
-  # For fast access of user data, Pure-FTPd creates a "database", which is a binary file that is ordered and has an index for quick access. Let's create this database:
+For fast access of user data, Pure-FTPd creates a "database", which is a binary file that is ordered and has an index for quick access. Let's create this database:
   pure-pw mkdb
 
-  # Set Pure-FTPd as a standalone server:
+Set Pure-FTPd as a standalone server:
   nano /etc/default/pure-ftpd-common
 
   # Replace this:
@@ -43,24 +43,24 @@ Then call bundle install on your console.
   # With this:
     STANDALONE_OR_INETD=standalone
 
-  # Ensure that Pure-FTPd server gets valid users from our pureftpd database file:
+Ensure that Pure-FTPd server gets valid users from our pureftpd database file:
   cd /etc/pure-ftpd/conf
   nano PureDB
 
-  # Check if the following line exists:
+Check if the following line exists:
   /etc/pure-ftpd/pureftpd.pdb
 
-  # Now you have point a symbolic link to the PureDB file:
+Now you have point a symbolic link to the PureDB file:
   cd /etc/pure-ftpd/auth
   ln -s /etc/pure-ftpd/conf/PureDB 50pure
 
-  # You should now see a new file "50pure" linking to ../conf/PureDB:
+You should now see a new file "50pure" linking to ../conf/PureDB:
   ls -ls
 
-  # Finally, (re)start Pure-FTPd:
+Finally, (re)start Pure-FTPd:
   /etc/init.d/pure-ftpd restart
 
-  # For more instructions, please refer to http://linux.justinhartman.com/PureFTPd_Installation_and_Setup
+For more instructions, please refer to http://linux.justinhartman.com/PureFTPd_Installation_and_Setup
 
 == TODO
 
