@@ -5,6 +5,8 @@ module Vidibus # :nodoc
     class << self
 
       # Default settings for Pure-FTPd.
+      # You may overwrite settings like this:
+      #   Vidibus::Pureftpd.settings[:sysuser] = "desaster_master"
       def settings
         @settings ||= {
           :sysuser => "pureftpd_user",
@@ -40,6 +42,8 @@ module Vidibus # :nodoc
       end
 
       # Changes password of existing user.
+      # Required options:
+      #   :login, :password
       def change_password(options)
         unless options.keys?(:login, :password)
           raise ArgumentError.new("Required options are :login, :password")
