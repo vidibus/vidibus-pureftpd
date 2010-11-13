@@ -62,7 +62,7 @@ module Vidibus # :nodoc
           error = stderr.read
         end
         unless error == ""
-          raise Error.new("Error while deleting user with this command:\n#{cmd}\n\n#{error}")
+          raise Error.new("Error while executing this command:\n#{cmd}\n\n#{error}")
         end
       end
     end
