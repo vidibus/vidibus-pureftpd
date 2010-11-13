@@ -11,7 +11,7 @@ module Vidibus # :nodoc
         @settings ||= {
           :sysuser => "pureftpd_user",
           :sysgroup => "pureftpd_group",
-          :password_file => "/etc/pure-ftpd/pureftpd.passwd",
+          :password_file => "/etc/pure-ftpd/pureftpd.passwd"
         }
       end
 
