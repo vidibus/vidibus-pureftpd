@@ -1,9 +1,9 @@
 module Vidibus # :nodoc
   module Pureftpd
     class Error < StandardError; end
-    
+
     class << self
-      
+
       # Default settings for Pure-FTPd.
       def settings
         @settings ||= {
@@ -39,7 +39,7 @@ module Vidibus # :nodoc
         perform(cmd)
       end
 
-      # Changes password of existing user
+      # Changes password of existing user.
       def change_password(options)
         unless options.keys?(:login, :password)
           raise ArgumentError.new("Required options are :login, :password")
