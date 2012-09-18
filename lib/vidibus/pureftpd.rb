@@ -1,17 +1,19 @@
-module Vidibus # :nodoc
+module Vidibus
   module Pureftpd
+    VERSION = '0.1.0'
+
     class Error < StandardError; end
 
     class << self
 
       # Default settings for Pure-FTPd.
       # You may overwrite settings like this:
-      #   Vidibus::Pureftpd.settings[:sysuser] = "desaster_master"
+      #   Vidibus::Pureftpd.settings[:sysuser] = 'desaster_master'
       def settings
         @settings ||= {
-          :sysuser => "pureftpd_user",
-          :sysgroup => "pureftpd_group",
-          :password_file => "/etc/pure-ftpd/pureftpd.passwd"
+          :sysuser => 'pureftpd_user',
+          :sysgroup => 'pureftpd_group',
+          :password_file => '/etc/pure-ftpd/pureftpd.passwd'
         }
       end
 
@@ -20,10 +22,10 @@ module Vidibus # :nodoc
       #   :login, :password, :directory
       def add_user(options)
         unless options.keys?(:login, :password, :directory)
-          raise ArgumentError.new("Required options are :login, :password, :directory")
+          raise ArgumentError.new('Required options are :login, :password, :directory')
         end
         password = options.delete(:password)
-        cmd = "pure-pw useradd %{login} -f %{password_file} -u %{sysuser} -g %{sysgroup} -d %{directory} -m" % settings.merge(options)
+        cmd = 'pure-pw useradd %{login} -f %{password_file} -u %{sysuser} -g %{sysgroup} -d %{directory} -m' % settings.merge(options)
         perform(cmd) do |stdin, stdout, stderr|
           stdin.puts(password)
           stdin.puts(password)
@@ -35,9 +37,9 @@ module Vidibus # :nodoc
       #   :login
       def delete_user(options)
         unless options.key?(:login)
-          raise ArgumentError.new("Required option is :login")
+          raise ArgumentError.new('Required option is :login')
         end
-        cmd = "pure-pw userdel %{login} -f %{password_file} -m" % settings.merge(options)
+        cmd = 'pure-pw userdel %{login} -f %{password_file} -m' % settings.merge(options)
         perform(cmd)
       end
 
@@ -46,10 +48,10 @@ module Vidibus # :nodoc
       #   :login, :password
       def change_password(options)
         unless options.keys?(:login, :password)
-          raise ArgumentError.new("Required options are :login, :password")
+          raise ArgumentError.new('Required options are :login, :password')
         end
         password = options.delete(:password)
-        cmd = "pure-pw passwd %{login} -f %{password_file} -m" % settings.merge(options)
+        cmd = 'pure-pw passwd %{login} -f %{password_file} -m' % settings.merge(options)
         perform(cmd) do |stdin, stdout, stderr|
           stdin.puts(password)
           stdin.puts(password)
@@ -60,14 +62,15 @@ module Vidibus # :nodoc
 
       # Performs given command. Accepts a block with |stdin, stdout, stderr|.
       def perform(cmd, &block)
-        error = ""
+        error = ''
         Open3.popen3(cmd) do |stdin, stdout, stderr|
           yield(stdin, stdout, stderr) if block_given?
           error = stderr.read
         end
-        unless error == ""
+        unless error == ''
           raise Error.new("Error while executing this command:\n#{cmd}\n\n#{error}")
         end
+        true
       end
     end
   end

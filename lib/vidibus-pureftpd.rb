@@ -1,4 +1,4 @@
-require "vidibus-core_extensions"
+require 'open3'
+require 'vidibus-core_extensions'
 
-$:.unshift(File.join(File.dirname(__FILE__), "vidibus"))
-require "pureftpd"
+require 'vidibus/pureftpd'
