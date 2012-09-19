@@ -138,7 +138,7 @@ Finally, (re)start Pure-FTPd:
 For more instructions, please [check this resource](http://linux.justinhartman.com/PureFTPd_Installation_and_Setup).
 
 
-### Install Pure-FTPd on OSX (required for testing this gem)
+### Install Pure-FTPd on OSX (if you want to test this gem on OSX)
 
 ```
 brew install pure-ftpd
