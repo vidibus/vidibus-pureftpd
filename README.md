@@ -186,6 +186,8 @@ Shut it down with:
 sudo pkill pure-ftpd
 ```
 
+If you really want to use Pure-FTPd as FTP server on OSX, you should consider installing [PureFTPd Manager](http://jeanmatthieu.free.fr/pureftpd/).
+
 
 ## TODO
 
