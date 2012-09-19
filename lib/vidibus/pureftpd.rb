@@ -1,7 +1,5 @@
 module Vidibus
   module Pureftpd
-    VERSION = '0.1.0'
-
     class Error < StandardError; end
 
     class << self
@@ -17,60 +15,25 @@ module Vidibus
         }
       end
 
-      # Adds a new user.
-      # Required options:
-      #   :login, :password, :directory
-      def add_user(options)
-        unless options.keys?(:login, :password, :directory)
-          raise ArgumentError.new('Required options are :login, :password, :directory')
-        end
-        password = options.delete(:password)
-        cmd = 'pure-pw useradd %{login} -f %{password_file} -u %{sysuser} -g %{sysgroup} -d %{directory} -m' % settings.merge(options)
-        perform(cmd) do |stdin, stdout, stderr|
-          stdin.puts(password)
-          stdin.puts(password)
-        end
-      end
-
-      # Deletes an existing user.
-      # Required options:
-      #   :login
-      def delete_user(options)
-        unless options.key?(:login)
-          raise ArgumentError.new('Required option is :login')
-        end
-        cmd = 'pure-pw userdel %{login} -f %{password_file} -m' % settings.merge(options)
-        perform(cmd)
-      end
-
-      # Changes password of existing user.
-      # Required options:
-      #   :login, :password
-      def change_password(options)
-        unless options.keys?(:login, :password)
-          raise ArgumentError.new('Required options are :login, :password')
-        end
-        password = options.delete(:password)
-        cmd = 'pure-pw passwd %{login} -f %{password_file} -m' % settings.merge(options)
-        perform(cmd) do |stdin, stdout, stderr|
-          stdin.puts(password)
-          stdin.puts(password)
-        end
-      end
-
-      protected
-
-      # Performs given command. Accepts a block with |stdin, stdout, stderr|.
+      # Performs given command prefixed with pure-pw.
+      # Accepts a block with |stdin, stdout, stderr|.
       def perform(cmd, &block)
+        cmd = "pure-pw #{cmd}"
         error = ''
-        Open3.popen3(cmd) do |stdin, stdout, stderr|
-          yield(stdin, stdout, stderr) if block_given?
-          error = stderr.read
-        end
+        output = nil
+
+        pid, stdin, stdout, stderr = POSIX::Spawn::popen4(cmd)
+        yield(stdin, stdout, stderr) if block_given?
+        error = stderr.read
+        output = stdout.read
+
         unless error == ''
-          raise Error.new("Error while executing this command:\n#{cmd}\n\n#{error}")
+          raise Error.new("Pure-FTPd returned an error:\n#{cmd}\n\n#{error}")
         end
-        true
+        output
+      ensure
+        [stdin, stdout, stderr].each { |io| io.close if !io.closed? }
+        Process::waitpid(pid)
       end
     end
   end

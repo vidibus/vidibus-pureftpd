@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 $LOAD_PATH.unshift File.expand_path('../lib', __FILE__)
 
-require 'vidibus/pureftpd'
+require 'vidibus/pureftpd/version'
 
 Gem::Specification.new do |s|
   s.name        = 'vidibus-pureftpd'
@@ -15,7 +15,9 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = '>= 1.3.6'
 
+  s.add_dependency 'posix-spawn'
   s.add_dependency 'vidibus-core_extensions'
+  s.add_dependency 'activemodel'
 
   s.add_development_dependency 'bundler', '>= 1.0.0'
   s.add_development_dependency 'rspec', '~> 2'

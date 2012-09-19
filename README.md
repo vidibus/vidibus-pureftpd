@@ -1,43 +1,69 @@
 # Vidibus::Pureftpd
 
-Allows control of [Pure-FTPd](http://www.pureftpd.org/project/pure-ftpd), the free, secure, production-quality and standard-conformant FTP server.
+Provides an ActiveModel-based abstraction of Pure-FTPd's [virtual users](http://download.pureftpd.org/pub/pure-ftpd/doc/README.Virtual-Users). [Pure-FTPd](http://www.pureftpd.org/project/pure-ftpd) is a free, secure, production-quality and standard-conformant FTP server.
 
-This gem is part of [Vidibus](http://vidibus.org), an open source toolset for building distributed (video) applications.
+This gem is part of [Vidibus](http://vidibus.org), an open source toolset for building distributed (video) applications. It has been tested with Ruby 1.8.7 and 1.9.3.
+
+
+## Usage
+
+Basic CRUD operations are available for `Vidibus::Pureftpd::User`:
+
+```ruby
+user = Vidibus::Pureftpd::User.new(
+  :login => 'my_user',
+  :password => 'verysecret',
+  :directory => '/home/my_user'
+)
+# => returns a new user instance
+
+user = Vidibus::Pureftpd::User.create(
+  :login => 'my_user',
+  :password => 'verysecret',
+  :directory => '/home/my_user'
+)
+# => creates a new user and returns the instance
+
+user = Vidibus::Pureftpd::User.find_by_login('my_user')
+# => reads user from database and returns an user instance
+
+user.save
+# => saves user to database and returns true
+
+user.destroy
+# => removes user from database
+```
+
+Additionally, some methods are provided for your convenience:
+
+```ruby
+user.valid?
+# => returns true if user is valid
+
+user.persisted?
+# => returns true if user has been saved to database
+
+user.reload
+# => reloads user from database
+```
+
+By default, `Vidibus::Pureftpd` will use these settings which you may override:
+
+```ruby
+Vidibus::Pureftpd.settings[:sysuser]        # => 'pureftpd_user'
+Vidibus::Pureftpd.settings[:sysgroup]       # => 'pureftpd_group'
+Vidibus::Pureftpd.settings[:password_file]  # => '/etc/pure-ftpd/pureftpd.passwd'
+```
+
 
 ## Installation
 
 Add the dependency to the Gemfile of your application: `gem 'vidibus-pureftpd'`. Then call bundle install on your console.
 
-
-## Usage
-
-Add a user:
-
-```
-Vidibus::Pureftpd.add_user({
-  :login => 'someuser',
-  :password => 'verysecret',
-  :directory => '/tmp'
-})
-```
-
-Delete a user:
-
-```
-Vidibus::Pureftpd.delete_user(:login => 'someuser')
-```
-
-Change a user's password:
-
-```
-Vidibus::Pureftpd.change_password({
-  :login => 'someuser',
-  :password => 'whatever'
-})
-```
+Installation of the Pure-FTPd server itself is quite simple:
 
 
-## Install Pure-FTPd on Debian Lenny
+### Install Pure-FTPd on Debian Lenny
 
 Get the package:
 
@@ -112,13 +138,13 @@ Finally, (re)start Pure-FTPd:
 For more instructions, please [check this resource](http://linux.justinhartman.com/PureFTPd_Installation_and_Setup).
 
 
-## Install Pure-FTPd on OSX for testing
+### Install Pure-FTPd on OSX (required for testing this gem)
 
 ```
 brew install pure-ftpd
 ```
 
-Create the user `pureftpd_user` with ID 483:
+In order to perform the tests, a certain user is required. Create the user `pureftpd_user` with ID 483:
 
 ```
 sudo dscl . create /Users/pureftpd_user uid 483
@@ -127,7 +153,7 @@ sudo dscl . create /Users/pureftpd_user UserShell /etc/pure-ftpd
 sudo dscl . create /Users/pureftpd_user NFSHomeDirectory /dev/null
 ```
 
-Create the group `pureftpd_group` with ID 483:
+Then create the group `pureftpd_group`, also with ID 483:
 
 ```
 sudo dscl . create /Groups/pureftpd_group gid 483
@@ -141,21 +167,14 @@ dscacheutil -q user
 dscacheutil -q group
 ```
 
-Ensure that the database exists and is writable for the user that executes RSpec:
 
-```
-sudo mkdir /etc/pure-ftpd/
-sudo touch /etc/pure-ftpd/pureftpd.passwd
-sudo chown -R `whoami` /etc/pure-ftpd/
-```
-
-To start the server (not needed for testing), type:
+Not needed for testing, but to start the server, type:
 
 ```
 sudo /usr/local/sbin/pure-ftpd &
 ```
 
-You should be able to connect via ftp:
+You should now be able to connect via ftp:
 
 ```
 ftp localhost
@@ -164,7 +183,27 @@ ftp localhost
 Shut it down with:
 
 ```
-pkill pure-ftpd
+sudo pkill pure-ftpd
+```
+
+
+## TODO
+
+Implement all user options offered by Pure-FTPd:
+
+```
+  -t <download bandwidth>
+  -T <upload bandwidth>
+  -n <max number of files>
+  -N <max Mbytes>
+  -q <upload ratio>
+  -Q <download ratio>
+  -r <allow client host>
+  -R <deny client host>
+  -i <allow local host>
+  -I <deny local host>
+  -y <max number of concurrent sessions>
+  -z <hhmm>-<hhmm>
 ```
 
 
