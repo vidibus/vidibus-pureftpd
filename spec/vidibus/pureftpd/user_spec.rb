@@ -57,6 +57,21 @@ describe Vidibus::Pureftpd::User do
       new_user.errors.messages[:login].should eq(['has already been taken'])
     end
 
+    it 'should pass with a login containing numbers and hyphens' do
+      new_user.login = 'some21'
+      new_user.should be_valid
+    end
+
+    it 'should pass with a login containing hyphens' do
+      new_user.login = 'some-thing'
+      new_user.should be_valid
+    end
+
+    it 'should pass with a login containing underlines' do
+      new_user.login = 'some_thing'
+      new_user.should be_valid
+    end
+
     it 'should fail without password' do
       new_user.password = nil
       new_user.should be_invalid

@@ -27,7 +27,7 @@ module Vidibus
       define_attribute_methods ACCESSSORS
 
       validates :password, :directory, :presence => true
-      validates :login, :format => { :with => /^[a-z_]+$/ }
+      validates :login, :format => { :with => /^[a-z_0-9\-]+$/ }
       validate :unique_login?, :if => :login_changed?
       validate :valid_directory?, :if => :directory_changed?
 
