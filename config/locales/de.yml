@@ -1,8 +1,13 @@
 de:
-  errors:
-    messages:
-      taken: 'ist bereits vergeben'
-      not_existent: 'gibt es nicht'
-      not_a_directory: 'muss ein Verzeichnis sein'
-      not_readable: 'muss lesbar sein'
-      not_writable: 'muss beschreibbar sein'
+  activemodel:
+    errors:
+      models:
+        vidibus/pureftpd/user:
+          attributes:
+            login:
+              taken: 'ist bereits vergeben'
+            directory:
+              not_existent: 'gibt es nicht'
+              not_a_directory: 'muss ein Verzeichnis sein'
+              not_readable: 'muss lesbar sein'
+              not_writable: 'muss beschreibbar sein'

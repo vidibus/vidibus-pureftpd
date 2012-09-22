@@ -1,8 +1,13 @@
 en:
-  errors:
-    messages:
-      taken: 'has already been taken'
-      not_existent: 'does not exist'
-      not_a_directory: 'must be a directory'
-      not_readable: 'must be readable'
-      not_writable: 'must be writable'
+  activemodel:
+    errors:
+      models:
+        vidibus/pureftpd/user:
+          attributes:
+            login:
+              taken: 'has already been taken'
+            directory:
+              not_existent: 'does not exist'
+              not_a_directory: 'must be a directory'
+              not_readable: 'must be readable'
+              not_writable: 'must be writable'
