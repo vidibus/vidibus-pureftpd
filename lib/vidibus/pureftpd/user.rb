@@ -101,6 +101,7 @@ module Vidibus
 
           User.new(attributes).tap do |user|
             user.instance_variable_set('@persisted', true)
+            user.instance_variable_set('@changed_attributes', {})
           end
         end
 

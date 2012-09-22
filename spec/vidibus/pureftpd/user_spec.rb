@@ -425,6 +425,11 @@ describe Vidibus::Pureftpd::User do
         user.password.should_not match(attributes[:password]) # is encrypted
         user.directory.should eq(attributes[:directory] + './')
       end
+
+      it 'should not flag attributes as changed' do
+        user = Vidibus::Pureftpd::User.find_by_login('rspec_testuser')
+        user.changes.should be_blank
+      end
     end
   end
 
