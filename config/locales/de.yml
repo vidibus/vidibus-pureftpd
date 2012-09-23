@@ -6,6 +6,8 @@ de:
           attributes:
             login:
               taken: 'ist bereits vergeben'
+            password:
+              reenter: 'bitte nochmals eingeben'
             directory:
               not_existent: 'gibt es nicht'
               not_a_directory: 'muss ein Verzeichnis sein'

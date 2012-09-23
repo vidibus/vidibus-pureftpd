@@ -28,7 +28,7 @@ module Vidibus
 
       validates :password, :directory, :presence => true
       validates :login, :format => { :with => /^[a-z_0-9\-]+$/ }
-      validate :unique_login?, :if => :login_changed?
+      validate :valid_login?, :if => :login_changed?
       validate :valid_directory?, :if => :directory_changed?
 
       def initialize(values = {})
@@ -119,10 +119,19 @@ module Vidibus
         attributes.merge(Vidibus::Pureftpd.settings)
       end
 
-      def unique_login?
+      def valid_login?
         return unless login.present?
         if User.find_by_login(login)
           self.errors.add(:login, :taken)
+        end
+        unless password_changed?
+          # Double check that password has not been changed
+          if existing = User.find_by_login(login_was)
+            if password == existing.password
+              self.password = nil
+              self.errors.add(:password, :reenter)
+            end
+          end
         end
       end
 

@@ -77,6 +77,13 @@ describe Vidibus::Pureftpd::User do
       new_user.should be_invalid
     end
 
+    it 'should fail with a changed login without fresh password' do
+      existing_user.reload
+      existing_user.login = 'whatever'
+      existing_user.should be_invalid
+      existing_user.errors.messages[:password].should eq(['please re-enter'])
+    end
+
     it 'should fail without directory' do
       new_user.directory = nil
       new_user.should be_invalid
@@ -249,32 +256,50 @@ describe Vidibus::Pureftpd::User do
 
         context 'with changed login' do
           before do
+            existing_user.reload
             existing_user.login = 'something_new'
           end
 
-          it 'should destroy the old user' do
-            old_login = existing_user.login_was
-            existing_user.save
-            Vidibus::Pureftpd::User.find_by_login(old_login).should be_nil
+          context 'and with a fresh password' do
+            before do
+              existing_user.password = 'fresh'
+            end
+
+            it 'should return true' do
+              existing_user.save.should be_true
+            end
+
+            it 'should return true, even if the old password has been entered' do
+              existing_user.password = attributes[:password]
+              existing_user.save.should be_true
+            end
+
+            it 'should destroy the old user' do
+              old_login = existing_user.login_was
+              existing_user.save
+              Vidibus::Pureftpd::User.find_by_login(old_login).should be_nil
+            end
+
+            it 'should create a new user with identical attributes' do
+              existing_user.save
+              user = Vidibus::Pureftpd::User.find_by_login(existing_user.login)
+              user.should be_a(Vidibus::Pureftpd::User)
+              user.login.should eq(existing_user.login)
+              user.directory.should eq(existing_user.directory + './')
+            end
+
+            # Double check uniqueness check because we don't rely on ids
+            it 'should fail if login is taken' do
+              user = Vidibus::Pureftpd::User.create(attributes.merge(:login => existing_user.login))
+              dont_allow(existing_user).destroy
+              existing_user.save.should be_false
+            end
           end
 
-          it 'should create a new user with identical attributes' do
-            existing_user.save
-            user = Vidibus::Pureftpd::User.find_by_login(existing_user.login)
-            user.should be_a(Vidibus::Pureftpd::User)
-            user.login.should eq(existing_user.login)
-            user.directory.should eq(existing_user.directory + './')
-          end
-
-          it 'should return true' do
-            existing_user.save.should be_true
-          end
-
-          # Double check uniqueness check because we don't rely on ids
-          it 'should fail if login is taken' do
-            user = Vidibus::Pureftpd::User.create(attributes.merge(:login => existing_user.login))
-            dont_allow(existing_user).destroy
-            existing_user.save.should be_false
+          context 'but without a fresh password' do
+            it 'should return false' do
+              existing_user.save.should be_false
+            end
           end
         end
 
