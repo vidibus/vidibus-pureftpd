@@ -5,7 +5,7 @@ describe Vidibus::Pureftpd::User do
     {
       :login => 'rspec_testuser',
       :password => 'secret',
-      :directory => '/tmp/tester/'
+      :directory => File.expand_path('spec/support/tmp') + '/'
     }
   end
   let(:new_user) { Vidibus::Pureftpd::User.new(attributes) }
