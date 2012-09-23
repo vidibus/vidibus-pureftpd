@@ -380,6 +380,11 @@ describe Vidibus::Pureftpd::User do
         existing_user.login = 'something_new'
         existing_user.reload.login.should eq(old_login)
       end
+
+      it 'should not flag attributes as changed' do
+        existing_user.reload
+        existing_user.changes.should be_blank
+      end
     end
 
     context 'on a new user' do

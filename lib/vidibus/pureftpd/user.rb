@@ -73,6 +73,7 @@ module Vidibus
       def reload
         if persisted? && login_was && (user = User.find_by_login(login_was))
           self.attributes = user.attributes
+          @changed_attributes.clear
           self
         else
           raise DocumentNotFound
