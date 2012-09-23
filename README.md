@@ -167,45 +167,44 @@ dscacheutil -q user
 dscacheutil -q group
 ```
 
+#### Debugging
 
-Not needed for testing, but to start the server, type:
+To start the server, e.g. for debugging the users you've created, type `sudo /usr/local/sbin/pure-ftpd &`
 
-```
-sudo /usr/local/sbin/pure-ftpd &
-```
+You should now be able to connect via ftp by entering `ftp localhost`. To shut it down, call `sudo pkill pure-ftpd`
 
-You should now be able to connect via ftp:
-
-```
-ftp localhost
-```
-
-Shut it down with:
-
-```
-sudo pkill pure-ftpd
-```
+In order to check which users have been created, call `pure-pw list`.
 
 If you really want to use Pure-FTPd as FTP server on OSX, you should consider installing [PureFTPd Manager](http://jeanmatthieu.free.fr/pureftpd/).
 
+
+#### Troubleshooting
+
+When using this gem in a web application, it may happen that the execution of the `pure-ftp` command fails. A reason for that may be that your webserver is not able access the command.
+
+I solved this issue by adding a symlink:
+
+```
+sudo ln -s /usr/local/bin/pure-pw /usr/bin/pure-pw
+```
 
 ## TODO
 
 Implement all user options offered by Pure-FTPd:
 
 ```
-  -t <download bandwidth>
-  -T <upload bandwidth>
-  -n <max number of files>
-  -N <max Mbytes>
-  -q <upload ratio>
-  -Q <download ratio>
-  -r <allow client host>
-  -R <deny client host>
-  -i <allow local host>
-  -I <deny local host>
-  -y <max number of concurrent sessions>
-  -z <hhmm>-<hhmm>
+-t <download bandwidth>
+-T <upload bandwidth>
+-n <max number of files>
+-N <max Mbytes>
+-q <upload ratio>
+-Q <download ratio>
+-r <allow client host>
+-R <deny client host>
+-i <allow local host>
+-I <deny local host>
+-y <max number of concurrent sessions>
+-z <hhmm>-<hhmm>
 ```
 
 
